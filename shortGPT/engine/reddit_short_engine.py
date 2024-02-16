@@ -1,3 +1,5 @@
+from shortGPT.audio.voice_module import VoiceModule
+from shortGPT.config.asset_db import AssetDatabase
 from shortGPT.config.languages import Language
 from shortGPT.engine.content_short_engine import ContentShortEngine
 from shortGPT.editing_framework.editing_engine import EditingEngine, EditingStep, Flow
@@ -7,10 +9,10 @@ import os
 
 class RedditShortEngine(ContentShortEngine):
     # Mapping of variable names to database paths
-    def __init__(self, background_video_name: str, background_music_name: str,short_id="",
-                 num_images=None, watermark=None, language:Language = Language.ENGLISH, voiceName="Antoni"):
+    def __init__(self,voiceModule: VoiceModule, background_video_name: str, background_music_name: str,short_id="",
+                 num_images=None, watermark=None, language:Language = Language.ENGLISH):
         super().__init__(short_id=short_id, short_type="reddit_shorts", background_video_name=background_video_name, background_music_name=background_music_name,
-                 num_images=num_images, watermark=watermark, language=language, voiceName=voiceName)
+                 num_images=num_images, watermark=watermark, language=language, voiceModule=voiceModule)
     
     def __generateRandomStory(self):
         question = reddit_gpt.getInterestingRedditQuestion()
@@ -78,7 +80,7 @@ class RedditShortEngine(ContentShortEngine):
                                                                           "volume_percentage": 0.11})
             videoEditor.addEditingStep(EditingStep.CROP_1920x1080, {
                                        'url': self._db_background_trimmed})
-            videoEditor.addEditingStep(EditingStep.ADD_SUBSCRIBE_ANIMATION)
+            videoEditor.addEditingStep(EditingStep.ADD_SUBSCRIBE_ANIMATION, {'url': AssetDatabase.get_asset_link('subscribe animation')})
 
             if self._db_watermark:
                 videoEditor.addEditingStep(EditingStep.ADD_WATERMARK, {
@@ -97,7 +99,7 @@ class RedditShortEngine(ContentShortEngine):
                                                                         'set_time_start': timing[0],
                                                                         'set_time_end': timing[1]})
 
-            videoEditor.renderVideo(outputPath, logger=self.logger)
+            videoEditor.renderVideo(outputPath, logger= self.logger if self.logger is not self.default_logger else None)
 
         self._db_video_path = outputPath
 

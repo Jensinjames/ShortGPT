@@ -1,7 +1,9 @@
 ffmpeg
+ffmpeg-python
 python-dotenv
-gradio
-openai
+gradio_client==0.2.10
+gradio==3.38.0
+openai==1.10.0
 tiktoken
 tinydb
 tinymongo
@@ -9,12 +11,12 @@ proglog
 yt-dlp
 torch
 torchaudio
-### whisper timestamped
-git+https://github.com/linto-ai/whisper-timestamped
-protobuf==3.20.0
+### whisper timestamped 
+whisper-timestamped
+protobuf==3.20.3
 pillow==9.0.0
-langchain
-moviepy
-termcolor
+moviepy==1.0.3
 progress
 questionary
+edge-tts
+TTS==0.22.0
